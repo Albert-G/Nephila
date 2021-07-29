@@ -1,0 +1,1 @@
+dotnet publish .\Nephila.Console\Nephila.Console.csproj -c Release -o .\Publish -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeAllContentForSelfExtract=true

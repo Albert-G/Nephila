@@ -2,6 +2,9 @@
 
 Nephila is a tool for .NET assembly reference analysis. 
 
+Build:
+Run Publish.bat and dotnet will create a single file application under 'Publish' folder.
+
 Usage:
 
 Nephila.exe [folder path] (Nephila will process assemblies under its folder if no parameter is given)
