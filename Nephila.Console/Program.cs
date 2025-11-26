@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Windows.Forms;
+using Microsoft.Msagl.GraphViewerGdi;
 
 namespace Nephila
 {
-    class Program
+    partial class Program
     {
         private static readonly string _prompt = "Nephila>";
         private static Nephila _nephilaInstance = null;
+
+        private static Form _form = null;
+        private static GViewer _gviewer = null;
 
         static void Main(string[] args)
         {
@@ -18,6 +22,9 @@ namespace Nephila
             _nephilaInstance = new Nephila(new ConsoleLogger(), path);
 
             Console.WriteLine("Done");
+
+            GraphInit();
+
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
 
             while (true)
@@ -39,13 +46,29 @@ namespace Nephila
             }
         }
 
-        private static void DrawAssemblyReferenceDiagram(HashSet<Tuple<Nephila.AssemblyReference, Nephila.AssemblyReference>> assemblyRefPairs, string input)
+        private static void GraphInit()
         {
-            var form = new System.Windows.Forms.Form();
-            form.Text = input;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            var gviewer = new Microsoft.Msagl.GraphViewerGdi.GViewer();
-            var graph = new Microsoft.Msagl.Drawing.Graph(input);
+            _form = new Form
+            {
+                WindowState = FormWindowState.Maximized,
+            };
+
+            _gviewer = new GViewer
+            {
+                Dock = DockStyle.Fill,
+            };
+
+            _form.Controls.Add(_gviewer);
+        }
+
+        private static void DrawAssemblyReferenceDiagram(HashSet<Tuple<Nephila.AssemblyReference, Nephila.AssemblyReference>> assemblyRefPairs, string assemblyName)
+        {
+            _form.Text = assemblyName;
+
+            var graph = new Microsoft.Msagl.Drawing.Graph(assemblyName);
 
             //create assembly ref diagram
             foreach (var arp in assemblyRefPairs)
@@ -53,22 +76,8 @@ namespace Nephila
                 graph.AddEdge(arp.Item1.String, arp.Item2.String);
             }
 
-            gviewer.Graph = graph;
-            form.SuspendLayout();
-            gviewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            form.Controls.Add(gviewer);
-            form.ResumeLayout();
-            form.ShowDialog();
-        }
-
-        class AutoCompletionHandler : IAutoCompleteHandler
-        {
-            public char[] Separators { get; set; } = new char[] { ' ', '/' };
-
-            public string[] GetSuggestions(string text, int index)
-            {
-                return _nephilaInstance.GetAssemblyNames(text).ToArray();
-            }
+            _gviewer.Graph = graph;
+            _form.ShowDialog();
         }
     }
 }
