@@ -14,16 +14,43 @@ namespace Nephila
         private static Form _form = null;
         private static GViewer _gviewer = null;
 
+        [STAThread]
         static void Main(string[] args)
         {
-            var path = Path.GetFullPath(args.Length > 0 ? args[0].Replace("\"", "") : "./ ");
+            GraphInit();
 
-            Console.Write($"Processing Assemblies under {path} ... ");
+            string path = string.Empty;
+            if (args.Length > 0)
+            {
+                path = Path.GetFullPath(args.Length > 0 ? args[0].Replace("\"", "") : "./ ");
+            }
+            else
+            {
+                // Open folder selection dialog when no path argument is provided
+                using (var dialog = new FolderBrowserDialog())
+                {
+                    dialog.Description = "Select assembly folder";
+                    dialog.UseDescriptionForTitle = true;
+                    dialog.ShowNewFolderButton = false;
+
+                    var result = dialog.ShowDialog();
+                    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                    {
+                        path = Path.GetFullPath(dialog.SelectedPath);
+                    }
+                    else
+                    {
+                        path = Path.GetFullPath("./");
+                    }
+                }
+            }
+
+            var recusiveDepth = args.Length > 1 && int.TryParse(args[1], out var depth) ? depth : 3;
+
+            Console.Write($"Processing Assemblies under {path}, recusive depth {recusiveDepth}... \n");
             _nephilaInstance = new Nephila(new ConsoleLogger(), path);
 
             Console.WriteLine("Done");
-
-            GraphInit();
 
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
 
@@ -35,7 +62,7 @@ namespace Nephila
                     break;
                 }
 
-                var assemblyRefPairs = _nephilaInstance.GetReferencePairs(input);
+                var assemblyRefPairs = _nephilaInstance.GetReferencePairs(input, 3);
                 if (assemblyRefPairs.Count <= 0)
                 {
                     Console.WriteLine($"No result for {input}.");
@@ -64,7 +91,7 @@ namespace Nephila
             _form.Controls.Add(_gviewer);
         }
 
-        private static void DrawAssemblyReferenceDiagram(HashSet<Tuple<Nephila.AssemblyReference, Nephila.AssemblyReference>> assemblyRefPairs, string assemblyName)
+        private static void DrawAssemblyReferenceDiagram(HashSet<Tuple<AssemblyReference, AssemblyReference>> assemblyRefPairs, string assemblyName)
         {
             _form.Text = assemblyName;
 
