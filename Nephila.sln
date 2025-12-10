@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11304.174 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nephila.Core", "Nephila.Core\Nephila.Core.csproj", "{C6CB8B7D-5D1D-4F37-864F-56C89FBD4981}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nephila.Console", "Nephila.Console\Nephila.Console.csproj", "{0A91EACD-1B2D-4C26-8737-6075114C3CCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nephila.Console.UnitTest", "Nephila.Console.UnitTest\Nephila.Console.UnitTest.csproj", "{F5522464-D440-10FA-30BE-15D5F0AA5116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0A91EACD-1B2D-4C26-8737-6075114C3CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A91EACD-1B2D-4C26-8737-6075114C3CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A91EACD-1B2D-4C26-8737-6075114C3CCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5522464-D440-10FA-30BE-15D5F0AA5116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5522464-D440-10FA-30BE-15D5F0AA5116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5522464-D440-10FA-30BE-15D5F0AA5116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5522464-D440-10FA-30BE-15D5F0AA5116}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

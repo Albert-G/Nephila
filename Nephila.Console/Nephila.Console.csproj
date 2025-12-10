@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Nephila.Core\Nephila.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Nephila.Console.UnitTest" />
+  </ItemGroup>
+
 </Project>

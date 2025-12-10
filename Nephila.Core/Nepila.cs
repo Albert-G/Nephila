@@ -10,39 +10,6 @@ namespace Nephila
 {
     public class Nephila
     { 
-        public class AssemblyReference
-        {
-            public string FileName { get; set; }
-            public Version Version { get; set; }
-            public Assembly Assembly { get; set; }
-            public bool FileLoaded
-            {
-                get
-                {
-                    return Assembly != null;
-                }
-            }
-            public ConcurrentDictionary<string, AssemblyReference> ReferredBy { get; set; } = new ConcurrentDictionary<string, AssemblyReference>();
-
-            public override string ToString()
-            {
-                return String;
-            }
-
-            private string _string;
-            public string String
-            {
-                get
-                {
-                    if (string.IsNullOrWhiteSpace(_string))
-                    {
-                        _string = $"{FileName} ({Version}){(FileLoaded ? string.Empty : " (Unloaded)")}";
-                    }
-                    return _string;
-                }
-            }
-        }
-
         private readonly ConcurrentDictionary<string, AssemblyReference> _assemblyIndex = new ConcurrentDictionary<string, AssemblyReference>();
         private readonly ILogger _logger;
 
@@ -73,7 +40,7 @@ namespace Nephila
             return refChains;
         }
 
-        public HashSet<Tuple<AssemblyReference, AssemblyReference>> GetReferencePairs(string assemblyName)
+        public HashSet<Tuple<AssemblyReference, AssemblyReference>> GetReferencePairs(string assemblyName, int depth = -1)
         {
             AssemblyReference ar = _assemblyIndex.Values.Where(x => x.String.IndexOf(assemblyName, StringComparison.CurrentCultureIgnoreCase) >= 0).FirstOrDefault();
 
@@ -81,23 +48,25 @@ namespace Nephila
 
             if (ar != null)
             {
-                ProcessReferencePairs(ar, referencePairs);
+                ProcessReferencePairs(ar, referencePairs, depth);
             }
 
             return referencePairs;
         }
 
-        private void ProcessReferencePairs(AssemblyReference assemblyReference, HashSet<Tuple<AssemblyReference, AssemblyReference>> referencePairs)
+        private void ProcessReferencePairs(AssemblyReference assemblyReference, HashSet<Tuple<AssemblyReference, AssemblyReference>> referencePairs, int depth)
         {
-            if (assemblyReference.ReferredBy.Count <= 0)
+            if (depth == 0 || assemblyReference.ReferredBy.Count <= 0)
             {
                 return;
             }
 
+            var nextDepth = depth > 0 ? depth - 1 : -1;
+
             foreach (var refferedAssembly in assemblyReference.ReferredBy.Values)
             {
                 referencePairs.Add(Tuple.Create(assemblyReference, refferedAssembly));
-                ProcessReferencePairs(refferedAssembly, referencePairs);
+                ProcessReferencePairs(refferedAssembly, referencePairs, nextDepth);
             }
         }
 
