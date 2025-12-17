@@ -52,6 +52,7 @@ namespace Nephila
             Console.WriteLine("Done");
 
             ReadLine.AutoCompletionHandler = new AutoCompletionHandler();
+            ReadLine.HistoryEnabled = true;
 
             while (true)
             {
