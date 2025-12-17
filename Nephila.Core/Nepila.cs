@@ -37,6 +37,7 @@ namespace Nephila
             {
                 ProcessReferenceChains(ar, refChain, refChains);
             }
+
             return refChains;
         }
 
@@ -113,7 +114,7 @@ namespace Nephila
             {
                 try
                 {
-                    var assembly = Assembly.LoadFile(Path.GetFullPath(file));
+                    var assembly = Assembly.Load(File.ReadAllBytes(Path.GetFullPath(file)));
 
                     _assemblyIndex.TryAdd(assembly.FullName, new AssemblyReference
                     {
