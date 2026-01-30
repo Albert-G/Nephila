@@ -89,26 +89,25 @@ namespace Nephila
             //fork current ref chain for processing
             for (int i = 0; i < assemblyReference.ReferredBy.Count; ++i)
             {
-                List<AssemblyReference> forkRefChian = null;
+                List<AssemblyReference> forkRefChain = null;
 
                 if (i < assemblyReference.ReferredBy.Count)
                 {
-                    forkRefChian = new List<AssemblyReference>(currentRefChain);
-                    refChains.Add(forkRefChian);
+                    forkRefChain = new List<AssemblyReference>(currentRefChain);
+                    refChains.Add(forkRefChain);
                 }
                 else
                 {
-                    forkRefChian = currentRefChain;
+                    forkRefChain = currentRefChain;
                 }
 
-                ProcessReferenceChains(assemblyReference.ReferredBy.ElementAt(i).Value, forkRefChian, refChains);
+                ProcessReferenceChains(assemblyReference.ReferredBy.ElementAt(i).Value, forkRefChain, refChains);
             }
         }
 
         private void ProcessAssemblies(string path = "./")
         {
             var files = Directory.GetFiles(path, "*.dll");
-            var workingDir = Path.GetFullPath(path);
 
             foreach(var file in files)
             {
